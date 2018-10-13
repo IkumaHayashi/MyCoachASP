@@ -26,7 +26,7 @@ namespace MyCoach.Controllers
                 //var viewTrainings =
                 //    from t in trainings
                 //    select new { t.Purpose, t.Title, t.UpdateDateTime, t.AddDateTime, t.Description, t.YoutubeURL };
-
+                //test
                 string userName = "";
                 using (var appUserContext = new ApplicationDbContext())
                 {
