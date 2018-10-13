@@ -1,4 +1,17 @@
 ﻿@using Microsoft.AspNet.Identity
+@using MyCoach.Models
+@{ 
+    string userName = string.Empty;
+    if (Request.IsAuthenticated)
+    {
+
+        using (var appContext = new ApplicationDbContext())
+        {
+            var user = appContext.Users.Find(User.Identity.GetUserId());
+            userName = user.Name;
+        }
+    }
+}
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -7,7 +20,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("こんにちは、" + User.Identity.GetUserName() + "さん", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink("こんにちは、" + userName + "さん", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">ログオフ</a></li>
     </ul>

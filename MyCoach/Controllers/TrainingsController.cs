@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace MyCoach.Controllers
 {
+    [Authorize]
     public class TrainingsController : Controller
     {
         private TrainingModels db = new TrainingModels();
@@ -19,14 +20,18 @@ namespace MyCoach.Controllers
         // GET: Trainings
         public ActionResult Index()
         {
-            var trainings = db.Trainings.ToList();
+
+            //ログインユーザーのID取得
+            string loginUserId = User.Identity.GetUserId();
+            var trainings = db.Trainings.Where(t => t.ApplicationUserId == loginUserId).ToList();
+
             var trainingIndexViewModels = new List<TrainingIndexViewModel>();
             for (int i = 0; i < trainings.Count; i++)
             {
                 //var viewTrainings =
                 //    from t in trainings
                 //    select new { t.Purpose, t.Title, t.UpdateDateTime, t.AddDateTime, t.Description, t.YoutubeURL };
-                //test
+                
                 string userName = "";
                 using (var appUserContext = new ApplicationDbContext())
                 {
@@ -37,6 +42,7 @@ namespace MyCoach.Controllers
 
                 var viewTraining = new TrainingIndexViewModel
                 {
+                    ID = trainings[i].ID,
                     AddDateTime = trainings[i].AddDateTime,
                     Description = trainings[i].Description,
                     Purpose = trainings[i].Purpose,
@@ -54,6 +60,7 @@ namespace MyCoach.Controllers
         }
 
         // GET: Trainings/Search
+        [AllowAnonymous]
         public ActionResult Search(string searchValue, IList<bool> SearchTag)
         {
 
@@ -141,7 +148,7 @@ namespace MyCoach.Controllers
                 {
                     var userId = trainings[i].ApplicationUserId;
                     var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
-                    if (user != null) userName = user.UserName;
+                    if (user != null) userName = user.Name;
                 }
 
                 //オブジェクトに設定
@@ -174,6 +181,7 @@ namespace MyCoach.Controllers
         }
 
         // GET: Trainings/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -191,7 +199,8 @@ namespace MyCoach.Controllers
                 Purpose = training.Purpose,
                 Title = training.Title,
                 UpdateDateTime = training.UpdateDateTime,
-                YoutubeURL = training.YoutubeURL
+                YoutubeURL = training.YoutubeURL,
+                Tags = training.Tags.Select(t => t.Name).ToList()
             };
 
             //ユーザー名を取得
@@ -204,15 +213,6 @@ namespace MyCoach.Controllers
             }
             trainingDetailsViewModel.UserName = userName;
 
-            //タグから表示用タグモデルを生成
-            List<ViewTagModel> ViewTagModels = new List<ViewTagModel>();
-            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, IsChecked = false }));
-            foreach(var tag in training.Tags)
-            {
-                ViewTagModels.FirstOrDefault(t => t.ID == tag.ID).IsChecked = true;
-            }
-            trainingDetailsViewModel.Tags = ViewTagModels;
-
 
             if (trainingDetailsViewModel == null)
             {
@@ -222,25 +222,16 @@ namespace MyCoach.Controllers
         }
 
         // GET: Trainings/Create
-        [LoginAuthentication]
         public ActionResult Create()
         {
             var trainingCreateViewModel = new TrainingCreateViewModel();
             trainingCreateViewModel.Tags = db.Tags.ToList();
-
-            //var tags = db.Tags.ToList();
-            //foreach(var tag in tags)
-            //{
-            //    var viewTag = new Tag { ID = tag.ID, Name = tag.Name, isChecked = false };
-            //    trainingCreateViewModel.ViewTags.Add(viewTag);
-            //}
             return View(trainingCreateViewModel);
         }
 
         // POST: Trainings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [LoginAuthentication]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Title,Purpose,Description,YoutubeURL,AddPersonId")] Training training,
@@ -263,7 +254,6 @@ namespace MyCoach.Controllers
             {
                 var userId = User.Identity.GetUserId();
                 training.ApplicationUserId = userId;
-                //training.User.
             }
 
             training.Tags = checkedTagList;
@@ -281,7 +271,6 @@ namespace MyCoach.Controllers
         }
 
         // GET: Trainings/Edit/5
-        [LoginAuthentication]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -334,11 +323,22 @@ namespace MyCoach.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [LoginAuthentication]
-        public ActionResult Edit([Bind(Include = "ID,Title,Purpose,Description,YoutubeURL")] Training training)
+        public ActionResult Edit(TrainingEditViewModel editTraining)
         {
+            var training = db.Trainings.Find(editTraining.ID);
+            if(training == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             if (ModelState.IsValid)
             {
+                training.Purpose = editTraining.Purpose;
+                training.Title = editTraining.Title;
+                training.YoutubeURL = editTraining.YoutubeURL;
+                training.Description = editTraining.Description;
+                
+
                 training.UpdateDateTime = DateTime.Now;
                 db.Entry(training).State = EntityState.Modified;
                 db.SaveChanges();
@@ -348,7 +348,6 @@ namespace MyCoach.Controllers
         }
 
         // GET: Trainings/Delete/5
-        [LoginAuthentication]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -364,7 +363,6 @@ namespace MyCoach.Controllers
         }
 
         // POST: Trainings/Delete/5
-        [LoginAuthentication]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

@@ -15,8 +15,7 @@ namespace MyCoach.ActionFilters
             {
                 return;
             }
-            //TODO:登録していないとできないようにする
-            return;
+            throw new Exception("ログインしてから利用してください。");
         }
 
         public void OnAuthenticationChallenge(AuthenticationChallengeContext filterContext)

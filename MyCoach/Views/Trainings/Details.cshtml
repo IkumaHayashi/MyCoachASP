@@ -39,10 +39,7 @@
         <dd>
             @foreach (var tag in Model.Tags)
             {
-
-            @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
-
-            <br />
+                <input type="button" class="btn btn-primary btn-xs" value="@Html.DisplayFor(modelItem => tag)">
             }
 <dt>
             @Html.DisplayNameFor(model => model.AddDateTime)
@@ -65,12 +62,16 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.YoutubeURL)
+            @{
+                if (Model.YoutubeURL != string.Empty)
+                {
+
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="@Html.DisplayFor(model => model.YoutubeURL)"></iframe>
+                    </div>
+                }
+            }
         </dd>
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

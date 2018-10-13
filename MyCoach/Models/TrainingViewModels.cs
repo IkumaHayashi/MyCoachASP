@@ -12,13 +12,9 @@ namespace MyCoach.Models
         public int ID { get; set; }
 
         [Display(Name = "タイトル")]
-        [Required]
-        [StringLength(60, MinimumLength = 1, ErrorMessage = "タイトルを入力してください。")]
         public string Title { get; set; }
 
         [Display(Name = "目的")]
-        [Required]
-        [StringLength(60, MinimumLength = 1, ErrorMessage = "目的を入力してください。")]
         public string Purpose { get; set; }
 
         [Display(Name = "説明")]
@@ -56,6 +52,7 @@ namespace MyCoach.Models
 
         [Display(Name = "説明")]
         [Required]
+        [StringLength(60, MinimumLength = 1, ErrorMessage = "説明を入力してください。。")]
         public string Description { get; set; }
 
         [Display(Name = "Youtubeのリンク")]
@@ -65,6 +62,8 @@ namespace MyCoach.Models
         [Display(Name = "タグ")]
         public List<Tag> Tags { get; set; }
     }
+
+
     public class TrainingSearchViewModel
     {
         public List<TrainingIndexViewModel> ViewModels { get; set; }
@@ -77,13 +76,12 @@ namespace MyCoach.Models
         : TrainingIndexViewModel
     {
 
-        [Display(Name = "タグ")]
-        public new List<ViewTagModel> Tags { get; set; }
     }
 
     public class TrainingEditViewModel
         : TrainingIndexViewModel
     {
+        private new DateTime AddDateTime { get; set; }
 
         [Display(Name = "タグ")]
         public new List<ViewTagModel> Tags { get; set; }

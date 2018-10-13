@@ -64,11 +64,11 @@ namespace MyCoach.Models
 
     public class RegisterViewModel
     {
-
+        
         [Required]
         [Display(Name = "ユーザー名")]
-        public string UserName { get; set; }
-
+        public string Name { get; set; }
+        
         [Required]
         [EmailAddress]
         [Display(Name = "電子メール")]

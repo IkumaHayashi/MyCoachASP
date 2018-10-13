@@ -8,23 +8,22 @@
 <h2>Index</h2>
 
 <div class="col-md-2">
-    <div class="category">
-        トレーニングを絞り込む<br />
+    トレーニングを絞り込む<br />
 
-        @using (Html.BeginForm("Search", "Trainings", FormMethod.Get, new { @class = "form-inline" }))
+    @using (Html.BeginForm("Search", "Trainings", FormMethod.Get))
+    {
+
+        @Html.TextBox("searchValue", "", new { @maxlength = 40, placeholder = "練習メニュー名など" })
+        <br/>
+        foreach (var tag in Model.ViewTagModels)
         {
 
-                    @Html.TextBox("searchValue", "", new { @maxlength = 40, placeholder = "練習メニュー名など" })
-            foreach (var tag in Model.ViewTagModels)
-            {
+            @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
 
-                @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
-
-                <br />
-            }
-            <input type="submit" value="検索" class="btn btn-default" />
+            <br />
         }
-    </div>
+        <input type="submit" value="検索" class="btn btn-default" />
+    }
 
 </div>
 
@@ -46,9 +45,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ViewModels[0].UpdateDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ViewModels[0].YoutubeURL)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ViewModels[0].Tags)
@@ -78,9 +74,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UpdateDateTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.YoutubeURL)
                 </td>
                 <td>
                     @foreach (var tag in item.Tags)
