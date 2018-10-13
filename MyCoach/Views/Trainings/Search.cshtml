@@ -1,0 +1,106 @@
+﻿@model MyCoach.Models.TrainingSearchViewModel
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="col-md-2">
+    <div class="category">
+        トレーニングを絞り込む<br />
+
+        @using (Html.BeginForm("Search", "Trainings", FormMethod.Get, new { @class = "form-inline" }))
+        {
+
+                    @Html.TextBox("searchValue", "", new { @maxlength = 40, placeholder = "練習メニュー名など" })
+            foreach (var tag in Model.ViewTagModels)
+            {
+
+                @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
+
+                <br />
+            }
+            <input type="submit" value="検索" class="btn btn-default" />
+        }
+    </div>
+
+</div>
+
+<div class="col-md-10">
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].Purpose)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].AddDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].UpdateDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].YoutubeURL)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].Tags)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewModels[0].UserName)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.ViewModels)
+                    {
+            <tr>
+                <td>
+
+                    @Html.ActionLink(item.Title, "Details", new { id = item.ID })
+                    @*@Html.DisplayFor(modelItem => item.Title)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Purpose)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AddDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.YoutubeURL)
+                </td>
+                <td>
+                    @foreach (var tag in item.Tags)
+                    {
+
+
+                        <input type="button" class="btn btn-primary btn-xs" value="@Html.DisplayFor(modelItem => tag)">
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                @*<td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    </td>*@
+            </tr>
+        }
+
+    </table>
+</div>
+

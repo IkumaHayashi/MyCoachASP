@@ -1,0 +1,76 @@
+﻿@model MyCoach.Models.TrainingDetailsViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Training</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Purpose)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Purpose)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Tags)
+        </dt>
+        <dd>
+            @foreach (var tag in Model.Tags)
+            {
+
+            @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
+
+            <br />
+            }
+<dt>
+            @Html.DisplayNameFor(model => model.AddDateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AddDateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdateDateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdateDateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YoutubeURL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YoutubeURL)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
