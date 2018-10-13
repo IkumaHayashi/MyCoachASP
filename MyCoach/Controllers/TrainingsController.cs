@@ -233,7 +233,7 @@ namespace MyCoach.Controllers
             //{
             //    var viewTag = new Tag { ID = tag.ID, Name = tag.Name, isChecked = false };
             //    trainingCreateViewModel.ViewTags.Add(viewTag);
-            //}//
+            //}
             return View(trainingCreateViewModel);
         }
 
