@@ -59,84 +59,80 @@ namespace MyCoach.Controllers
             return View(trainingIndexViewModels);
         }
 
-        // GET: Trainings/Search
+        //GET: Trainings/Search
+        //[AllowAnonymous]
+        //public ActionResult Search()
+        //{
+
+        //    return View(trainingSearchViewModel);
+        //}
+
+
+        // GET: Trainings/Search?searchValue=&SearchTag=
         [AllowAnonymous]
-        public ActionResult Search(string searchValue, IList<bool> SearchTag)
+        public ActionResult Search(string searchValue, IList<string> SearchTags)
         {
 
 
-            //パラメータからタグの絞り込み状況を取得
-            var checkedTagKeys = Request.Params.AllKeys.Where(x => x.Contains("SearchTag_")).ToList();
+            //表示用タグオブジェクトを取得
             List<ViewTagModel> ViewTagModels = new List<ViewTagModel>();
+            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, Checked = "" }));
 
-            //パラメータにタグの指定がない場合、DBからタグ情報を取得
-            if(checkedTagKeys.Count == 0)
+            //パラメータにタグの指定がある場合、チェック済みとする。
+            if (SearchTags != null)
             {
-                db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, IsChecked = false }));
+                foreach( var tag in SearchTags)
+                {
+                    int ID = int.Parse(tag);
+                    ViewTagModels.Find(vt => vt.ID == ID).Checked = "checked";
+
+                }
+
             }
-            //パラメータにタグの指定がある場合、選択状況からタグ情報を取得
+
+            List<Training> trainings = new List<Training>();
+
+            //検索文字列、タグどちらも指定がない場合、全件取得
+            if (string.IsNullOrEmpty(searchValue) && SearchTags == null)
+            {
+                trainings = db.Trainings.ToList();
+
+            }
             else
             {
 
-                foreach (var tagKey in checkedTagKeys)
+
+                //検索文字列にヒットするトレーニングを取得
+                if (!string.IsNullOrEmpty(searchValue))
                 {
-                    bool IsChecked = false;
-                    var IsCheckedValues = Request.Params[tagKey].Split(',').ToList<string>();
-                    foreach (var value in IsCheckedValues)
-                    {
-                        IsChecked = IsChecked || bool.Parse(value);
-                    }
+                    db.Trainings.Where(t => t.Title.Contains(searchValue)).ToList().ForEach(training => trainings.Add(training));
+                    db.Trainings.Where(t => t.Purpose.Contains(searchValue)).ToList().ForEach(training => trainings.Add(training));
+                    db.Trainings.Where(t => t.Description.Contains(searchValue)).ToList().ForEach(training => trainings.Add(training));
 
-                    var viewTagModel = new ViewTagModel
-                    {
-                        ID = int.Parse(tagKey.Replace("SearchTag_", "")),
-                        IsChecked = IsChecked
-                    };
-                    viewTagModel.Name = db.Tags.First(tag => tag.ID == viewTagModel.ID).Name;
-
-                    ViewTagModels.Add(viewTagModel);
-                }
-            }
-
-            //検索文字列にヒットするトレーニングを取得
-            List<Training> trainings = new List<Training>();
-            var trainingQuery = db.Trainings.AsQueryable();
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                trainingQuery = trainingQuery.Where(t => t.Title.Contains(searchValue));
-                trainingQuery = trainingQuery.Where(t => t.Purpose.Contains(searchValue));
-                trainingQuery = trainingQuery.Where(t => t.Description.Contains(searchValue));
-                
-            }
-            trainingQuery.ToList().ForEach(x => trainings.Add(x));
-
-            //タグにヒットするトレーニングを取得
-            trainingQuery = db.Trainings.AsQueryable();
-            foreach(var tag in ViewTagModels)
-            {
-                if (!tag.IsChecked) continue;
-
-                foreach(var training in db.Trainings)
-                {
-                    if (training.Tags.Select(x => x.Name).Contains(tag.Name))
-                    {
-
-                        trainingQuery = trainingQuery.Where( t => t.ID == training.ID);
-
-                        trainingQuery.ToList().ForEach(x => trainings.Add(x));
-                    }
-                    
                 }
 
-                //trainings = trainings.Where(
-                //    t => t.Tags.Select(x => x.Name).Contains(tag.Name)
-                //    );
+                //タグにヒットするトレーニングを取得
+                var trainingQuery = db.Trainings.AsQueryable();
+                foreach (var tag in ViewTagModels)
+                {
+                    if (tag.Checked == "") continue;
+
+                    foreach (var training in db.Trainings)
+                    {
+                        if (training.Tags.Select(x => x.Name).Contains(tag.Name))
+                        {
+
+                            trainingQuery = trainingQuery.Where(t => t.ID == training.ID);
+
+                            trainingQuery.ToList().ForEach(x => trainings.Add(x));
+                        }
+
+                    }
+                }
+
+                //重複削除
+                trainings = trainings.Distinct().ToList();
             }
-
-            if (string.IsNullOrEmpty(searchValue) && checkedTagKeys.Count == 0)
-                trainings = db.Trainings.ToList();
-
-            trainings = trainings.Distinct().ToList();
 
             //検索結果に表示するViewデータを生成
             var trainingIndexViewModels = new List<TrainingIndexViewModel>();
@@ -279,6 +275,14 @@ namespace MyCoach.Controllers
             }
             Training training = db.Trainings.Find(id);
 
+            //ユーザー権限チェック
+            var loginUserId = User.Identity.GetUserId();
+            if(training.ApplicationUserId != loginUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+
             //View用モデル生成
             var trainingEditViewModel = new TrainingEditViewModel()
             {
@@ -303,10 +307,10 @@ namespace MyCoach.Controllers
 
             //タグから表示用タグモデルを生成
             List<ViewTagModel> ViewTagModels = new List<ViewTagModel>();
-            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, IsChecked = false }));
+            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, Checked = "" }));
             foreach (var tag in training.Tags)
             {
-                ViewTagModels.FirstOrDefault(t => t.ID == tag.ID).IsChecked = true;
+                ViewTagModels.FirstOrDefault(t => t.ID == tag.ID).Checked = "checked";
             }
             trainingEditViewModel.Tags = ViewTagModels;
 
@@ -354,11 +358,22 @@ namespace MyCoach.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+
             Training training = db.Trainings.Find(id);
             if (training == null)
             {
                 return HttpNotFound();
             }
+
+
+            //ユーザー権限チェック
+            var loginUserId = User.Identity.GetUserId();
+            if (training.ApplicationUserId != loginUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             return View(training);
         }
 

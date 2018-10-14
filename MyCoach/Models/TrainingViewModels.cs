@@ -90,7 +90,7 @@ namespace MyCoach.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public bool IsChecked { get; set; }
+        public string Checked { get; set; }
     }
 
 

@@ -23,4 +23,18 @@ namespace MyCoach.ActionFilters
             return;
         }
     }
+
+    public class OwnerAuthorizationAttribute : FilterAttribute, IAuthorizationFilter
+    {
+        public OwnerAuthorizationAttribute(int? id)
+        {
+
+        }
+
+        public void OnAuthorization(AuthorizationContext filterContext)
+        {
+            if (filterContext == null)
+                throw new ArgumentNullException("filterContext");
+        }
+    }
 }

@@ -56,7 +56,7 @@
             @foreach (var tag in Model.Tags)
             {
 
-                @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
+                <input type="checkbox" name="SearchTags" value="@tag.ID" @tag.Checked /> @tag.Name
 
                 <br />
             }

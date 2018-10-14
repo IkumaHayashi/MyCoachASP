@@ -12,13 +12,16 @@
 
     @using (Html.BeginForm("Search", "Trainings", FormMethod.Get))
     {
-
-        @Html.TextBox("searchValue", "", new { @maxlength = 40, placeholder = "練習メニュー名など" })
+        
+        @Html.TextBox("searchValue", "", new { @placeholder = "練習メニュー名など" })
         <br/>
         foreach (var tag in Model.ViewTagModels)
         {
+            <input type="checkbox" name="SearchTags" value="@tag.ID" @tag.Checked /> @tag.Name
 
-            @Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name
+            @*@Html.CheckBoxFor(m => tag.IsChecked);*@
+            @*@Html.CheckBox("SearchTag_" + tag.ID) @tag.Name*@
+            @*@Html.CheckBox("SearchTag_" + tag.ID, tag.IsChecked) @tag.Name*@
 
             <br />
         }
