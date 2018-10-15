@@ -23,8 +23,15 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("トレーニング検索", "Search", "Trainings")</li>
-                    <li>@Html.ActionLink("トレーニング投稿", "Create", "Trainings")</li>
-                    <li>@Html.ActionLink("トレーニング管理", "Index", "Trainings")</li>
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            <li>@Html.ActionLink("トレーニング投稿", "Create", "Trainings")</li>
+                            <li>@Html.ActionLink("トレーニング管理", "Index", "Trainings")</li>
+                            <li>@Html.ActionLink("お気に入り", "Index", "Favorites")</li>
+
+                        }
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -32,15 +39,6 @@
     </div>
     <div class="container body-content">
 
-        <div class="col-md-12">
-
-            @using (Html.BeginForm("Search", "Trainings", FormMethod.Get, new { @class = "form-inline" }))
-            {
-
-
-
-            }
-        </div>
         @RenderBody()
         <hr />
         <footer>

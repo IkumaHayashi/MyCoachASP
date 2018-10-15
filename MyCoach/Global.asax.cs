@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Data.Entity;
-using MyCoach.Migrations;
 using MyCoach.Models;
 
 namespace MyCoach
@@ -25,6 +24,7 @@ namespace MyCoach
             //    );
 
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<MyCoach.Models.TrainingModels>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MyCoachDatabaseContext, Configuration>());
             Database.SetInitializer(new MyCoachDatabaseInitializer());
         }
     }

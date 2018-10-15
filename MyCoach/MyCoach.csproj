@@ -201,20 +201,31 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FavoritesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TrainingsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810131223154_AddNamePropertyToApplicationUser.cs" />
-    <Compile Include="Migrations\201810131223154_AddNamePropertyToApplicationUser.Designer.cs">
-      <DependentUpon>201810131223154_AddNamePropertyToApplicationUser.cs</DependentUpon>
+    <Compile Include="Migrations\201810142209090_InitIdentityModels.cs" />
+    <Compile Include="Migrations\201810142209090_InitIdentityModels.Designer.cs">
+      <DependentUpon>201810142209090_InitIdentityModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810142210313_InitMyCoachDatabaseContext.cs" />
+    <Compile Include="Migrations\201810142210313_InitMyCoachDatabaseContext.Designer.cs">
+      <DependentUpon>201810142210313_InitMyCoachDatabaseContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810151118334_InitMyCoachDatabase.cs" />
+    <Compile Include="Migrations\201810151118334_InitMyCoachDatabase.Designer.cs">
+      <DependentUpon>201810151118334_InitMyCoachDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\FavoriteModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MyCoachDatabaseContext.cs" />
     <Compile Include="Models\MyCoachDatabaseInitializer.cs" />
     <Compile Include="Models\TrainingModels.cs" />
     <Compile Include="Models\TrainingViewModels.cs" />
@@ -288,6 +299,11 @@
     <Content Include="Views\Trainings\Edit.cshtml" />
     <Content Include="Views\Trainings\Index.cshtml" />
     <Content Include="Views\Trainings\Search.cshtml" />
+    <Content Include="Views\Favorites\Create.cshtml" />
+    <Content Include="Views\Favorites\Delete.cshtml" />
+    <Content Include="Views\Favorites\Details.cshtml" />
+    <Content Include="Views\Favorites\Edit.cshtml" />
+    <Content Include="Views\Favorites\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -306,8 +322,14 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201810131223154_AddNamePropertyToApplicationUser.resx">
-      <DependentUpon>201810131223154_AddNamePropertyToApplicationUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201810142209090_InitIdentityModels.resx">
+      <DependentUpon>201810142209090_InitIdentityModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810142210313_InitMyCoachDatabaseContext.resx">
+      <DependentUpon>201810142210313_InitMyCoachDatabaseContext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810151118334_InitMyCoachDatabase.resx">
+      <DependentUpon>201810151118334_InitMyCoachDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

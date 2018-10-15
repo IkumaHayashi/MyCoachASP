@@ -42,7 +42,7 @@ namespace MyCoach
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<MyCoachDatabaseContext>()));
             // ユーザー名の検証ロジックを設定します
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {

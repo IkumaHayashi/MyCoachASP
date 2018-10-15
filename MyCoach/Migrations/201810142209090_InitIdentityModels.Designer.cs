@@ -7,13 +7,13 @@ namespace MyCoach.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class AddNamePropertyToApplicationUser : IMigrationMetadata
+    public sealed partial class InitIdentityModels : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddNamePropertyToApplicationUser));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitIdentityModels));
         
         string IMigrationMetadata.Id
         {
-            get { return "201810131223154_AddNamePropertyToApplicationUser"; }
+            get { return "201810142209090_InitIdentityModels"; }
         }
         
         string IMigrationMetadata.Source

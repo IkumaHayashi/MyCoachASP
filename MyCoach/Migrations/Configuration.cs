@@ -5,15 +5,14 @@ namespace MyCoach.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<MyCoach.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<MyCoach.Models.MyCoachDatabaseContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "MyCoach.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(MyCoach.Models.ApplicationDbContext context)
+        protected override void Seed(MyCoach.Models.MyCoachDatabaseContext context)
         {
             //  This method will be called after migrating to the latest version.
 

@@ -5,10 +5,10 @@
     if (Request.IsAuthenticated)
     {
 
-        using (var appContext = new ApplicationDbContext())
+        using (var appContext = new MyCoachDatabaseContext())
         {
             var user = appContext.Users.Find(User.Identity.GetUserId());
-            userName = user.Name;
+            if (user != null) { userName = user.Name; }
         }
     }
 }

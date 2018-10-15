@@ -15,7 +15,7 @@ namespace MyCoach.Controllers
     [Authorize]
     public class TrainingsController : Controller
     {
-        private TrainingModels db = new TrainingModels();
+        private MyCoachDatabaseContext db = new MyCoachDatabaseContext();
 
         // GET: Trainings
         public ActionResult Index()
@@ -33,12 +33,9 @@ namespace MyCoach.Controllers
                 //    select new { t.Purpose, t.Title, t.UpdateDateTime, t.AddDateTime, t.Description, t.YoutubeURL };
                 
                 string userName = "";
-                using (var appUserContext = new ApplicationDbContext())
-                {
-                    var userId = trainings[i].ApplicationUserId;
-                    var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
-                    if (user != null) userName = user.UserName;
-                }
+                var userId = trainings[i].ApplicationUserId;
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user != null) userName = user.UserName;
 
                 var viewTraining = new TrainingIndexViewModel
                 {
@@ -112,7 +109,6 @@ namespace MyCoach.Controllers
                 }
 
                 //タグにヒットするトレーニングを取得
-                var trainingQuery = db.Trainings.AsQueryable();
                 foreach (var tag in ViewTagModels)
                 {
                     if (tag.Checked == "") continue;
@@ -121,10 +117,7 @@ namespace MyCoach.Controllers
                     {
                         if (training.Tags.Select(x => x.Name).Contains(tag.Name))
                         {
-
-                            trainingQuery = trainingQuery.Where(t => t.ID == training.ID);
-
-                            trainingQuery.ToList().ForEach(x => trainings.Add(x));
+                            trainings.Add(training);
                         }
 
                     }
@@ -140,7 +133,7 @@ namespace MyCoach.Controllers
             {
                 //ユーザー名を取得
                 string userName = "";
-                using (var appUserContext = new ApplicationDbContext())
+                using (var appUserContext = new MyCoachDatabaseContext())
                 {
                     var userId = trainings[i].ApplicationUserId;
                     var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
@@ -196,18 +189,19 @@ namespace MyCoach.Controllers
                 Title = training.Title,
                 UpdateDateTime = training.UpdateDateTime,
                 YoutubeURL = training.YoutubeURL,
-                Tags = training.Tags.Select(t => t.Name).ToList()
+                Tags = training.Tags.Select(t => t.Name).ToList(),
+                IsFavorite = true
             };
 
             //ユーザー名を取得
             string userName = "";
-            using (var appUserContext = new ApplicationDbContext())
-            {
-                var userId = training.ApplicationUserId;
-                var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
-                if (user != null) userName = user.UserName;
-            }
-            trainingDetailsViewModel.UserName = userName;
+            var userId = training.ApplicationUserId;
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null) userName = user.UserName;
+
+            //お気に入り追加済みか判定
+            var favorite = db.Favorites.FirstOrDefault(f => f.ApplicationUserId == userId && f.TrainingID == id);
+            if (favorite == null) trainingDetailsViewModel.IsFavorite = false;
 
 
             if (trainingDetailsViewModel == null)
@@ -246,11 +240,8 @@ namespace MyCoach.Controllers
             }
 
 
-            using (var appUserContext = new ApplicationDbContext())
-            {
-                var userId = User.Identity.GetUserId();
-                training.ApplicationUserId = userId;
-            }
+            var userId = User.Identity.GetUserId();
+            training.ApplicationUserId = userId;
 
             training.Tags = checkedTagList;
             training.AddDateTime = DateTime.Now;
@@ -297,12 +288,9 @@ namespace MyCoach.Controllers
 
             //ユーザー名を取得
             string userName = "";
-            using (var appUserContext = new ApplicationDbContext())
-            {
-                var userId = training.ApplicationUserId;
-                var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
-                if (user != null) userName = user.UserName;
-            }
+            var userId = training.ApplicationUserId;
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null) userName = user.UserName;
             trainingEditViewModel.UserName = userName;
 
             //タグから表示用タグモデルを生成
@@ -335,13 +323,19 @@ namespace MyCoach.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+            //チェックされたタグを取得
+            List<Tag> checkedTags = new List<Tag>();
+            var checkedTagValues = Request.Params["SearchTags"].Split(',').ToList();
+            checkedTagValues.ForEach(ct => checkedTags.Add(db.Tags.Find(int.Parse(ct))));
+
+
             if (ModelState.IsValid)
             {
                 training.Purpose = editTraining.Purpose;
                 training.Title = editTraining.Title;
                 training.YoutubeURL = editTraining.YoutubeURL;
                 training.Description = editTraining.Description;
-                
+                training.Tags = checkedTags;
 
                 training.UpdateDateTime = DateTime.Now;
                 db.Entry(training).State = EntityState.Modified;

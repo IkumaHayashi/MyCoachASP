@@ -75,7 +75,7 @@ namespace MyCoach.Models
     public class TrainingDetailsViewModel
         : TrainingIndexViewModel
     {
-
+        public bool IsFavorite { get; set; }
     }
 
     public class TrainingEditViewModel
