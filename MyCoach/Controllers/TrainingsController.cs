@@ -113,7 +113,7 @@ namespace MyCoach.Controllers
                 {
                     if (tag.Checked == "") continue;
 
-                    foreach (var training in db.Trainings)
+                    foreach (var training in db.Trainings.ToList())
                     {
                         if (training.Tags.Select(x => x.Name).Contains(tag.Name))
                         {

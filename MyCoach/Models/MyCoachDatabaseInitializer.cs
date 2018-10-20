@@ -13,13 +13,13 @@ namespace MyCoach.Models
         //DropCreateDatabaseIfModelChanges<MyCoachDatabaseContext>
         DropCreateDatabaseAlways<MyCoachDatabaseContext>
     {
-        public override void InitializeDatabase(MyCoachDatabaseContext context)
-        {
-            context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction
-                , string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", context.Database.Connection.Database));
+        //public override void InitializeDatabase(MyCoachDatabaseContext context)
+        //{
+        //    context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction
+        //        , string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", context.Database.Connection.Database));
 
-            base.InitializeDatabase(context);
-        }
+        //    base.InitializeDatabase(context);
+        //}
         protected override void Seed(MyCoach.Models.MyCoachDatabaseContext context)
         {
             base.Seed(context);
