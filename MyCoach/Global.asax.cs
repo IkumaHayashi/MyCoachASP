@@ -19,11 +19,6 @@ namespace MyCoach
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            //Database.SetInitializer(
-            //    new MigrateDatabaseToLatestVersion<TrainingModels, Configuration>()
-            //    );
-
-            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<MyCoach.Models.TrainingModels>());
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<MyCoachDatabaseContext, Configuration>());
             Database.SetInitializer(new MyCoachDatabaseInitializer());
         }
