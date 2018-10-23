@@ -40,7 +40,7 @@ namespace MyCoach.Controllers
                 var viewTraining = new TrainingIndexViewModel
                 {
                     ID = trainings[i].ID,
-                    AddDateTime = trainings[i].AddDateTime,
+                    AddDateTime = trainings[i].AddDateTime.ToShortDateString(),
                     Description = trainings[i].Description,
                     Purpose = trainings[i].Purpose,
                     Title = trainings[i].Title,
@@ -73,7 +73,7 @@ namespace MyCoach.Controllers
 
             //表示用タグオブジェクトを取得
             List<ViewTagModel> ViewTagModels = new List<ViewTagModel>();
-            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, Checked = "" }));
+            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, Checked = false }));
 
             //パラメータにタグの指定がある場合、チェック済みとする。
             if (SearchTags != null)
@@ -81,7 +81,7 @@ namespace MyCoach.Controllers
                 foreach( var tag in SearchTags)
                 {
                     int ID = int.Parse(tag);
-                    ViewTagModels.Find(vt => vt.ID == ID).Checked = "checked";
+                    ViewTagModels.Find(vt => vt.ID == ID).Checked = true;
 
                 }
 
@@ -111,7 +111,7 @@ namespace MyCoach.Controllers
                 //タグにヒットするトレーニングを取得
                 foreach (var tag in ViewTagModels)
                 {
-                    if (tag.Checked == "") continue;
+                    if (tag.Checked == false) continue;
 
                     foreach (var training in db.Trainings.ToList())
                     {
@@ -144,7 +144,7 @@ namespace MyCoach.Controllers
                 var viewTraining = new TrainingIndexViewModel
                 {
                     ID = trainings[i].ID,
-                    AddDateTime = trainings[i].AddDateTime,
+                    AddDateTime = trainings[i].AddDateTime.ToShortDateString(),
                     Description = trainings[i].Description,
                     Purpose = trainings[i].Purpose,
                     Title = trainings[i].Title,
@@ -179,20 +179,6 @@ namespace MyCoach.Controllers
             }
             Training training = db.Trainings.Find(id);
 
-            //View用モデル生成
-            var trainingDetailsViewModel = new TrainingDetailsViewModel()
-            {
-                ID = training.ID,
-                AddDateTime = training.AddDateTime,
-                Description = training.Description,
-                Purpose = training.Purpose,
-                Title = training.Title,
-                UpdateDateTime = training.UpdateDateTime,
-                YoutubeURL = training.YoutubeURL,
-                Tags = training.Tags.Select(t => t.Name).ToList(),
-                IsFavorite = true
-            };
-
             //ユーザー名を取得
             string userName = "";
             var userId = training.ApplicationUserId;
@@ -201,7 +187,28 @@ namespace MyCoach.Controllers
 
             //お気に入り追加済みか判定
             var favorite = db.Favorites.FirstOrDefault(f => f.ApplicationUserId == userId && f.TrainingID == id);
-            if (favorite == null) trainingDetailsViewModel.IsFavorite = false;
+            bool isFavorite = true;
+            if (favorite == null) isFavorite = false;
+
+
+
+            //View用モデル生成
+            var trainingDetailsViewModel = new TrainingDetailsViewModel()
+            {
+                ID = training.ID,
+                AddDateTime = training.AddDateTime.ToShortDateString(),
+                Description = training.Description,
+                Purpose = training.Purpose,
+                Title = training.Title,
+                UpdateDateTime = training.UpdateDateTime,
+                YoutubeURL = training.YoutubeURL,
+                Tags = training.Tags.Select(t => t.Name).ToList(),
+                IsFavorite = isFavorite,
+                RecommendPersonNumber = training.RecommendPersonNumber,
+                RequiredPersonNumber = training.RequiredPersonNumber,
+                TimeDuration = training.TimeDuration, 
+                UserName = userName
+            };
 
 
             if (trainingDetailsViewModel == null)
@@ -278,7 +285,7 @@ namespace MyCoach.Controllers
             var trainingEditViewModel = new TrainingEditViewModel()
             {
                 ID = training.ID,
-                AddDateTime = training.AddDateTime,
+                AddDateTime = training.AddDateTime.ToShortDateString(),
                 Description = training.Description,
                 Purpose = training.Purpose,
                 Title = training.Title,
@@ -295,10 +302,10 @@ namespace MyCoach.Controllers
 
             //タグから表示用タグモデルを生成
             List<ViewTagModel> ViewTagModels = new List<ViewTagModel>();
-            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, Checked = "" }));
+            db.Tags.ToList().ForEach(t => ViewTagModels.Add(new ViewTagModel { ID = t.ID, Name = t.Name, Checked = false }));
             foreach (var tag in training.Tags)
             {
-                ViewTagModels.FirstOrDefault(t => t.ID == tag.ID).Checked = "checked";
+                ViewTagModels.FirstOrDefault(t => t.ID == tag.ID).Checked = true;
             }
             trainingEditViewModel.Tags = ViewTagModels;
 

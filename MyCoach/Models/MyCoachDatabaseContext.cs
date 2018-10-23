@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -28,11 +29,28 @@ namespace MyCoach.Models
         // 別のデータベースとデータベース プロバイダーまたはそのいずれかを対象とする場合は、
         // アプリケーション構成ファイルで 'Trainings' 接続文字列を変更してください。
         public MyCoachDatabaseContext()
-            : base("name=MyCoachDatabaseContext")
+            : base(GetRDSConnectionString())
         {
         }
 
-        public static MyCoachDatabaseContext Create()
+        public static string GetRDSConnectionString()
+        {
+            var appConfig = ConfigurationManager.AppSettings;
+
+            string dbname = appConfig["RDS_DB_NAME"];
+
+            if (string.IsNullOrEmpty(dbname)) return "name=MyCoachDatabaseContext";
+
+            string username = appConfig["RDS_USERNAME"];
+            string password = appConfig["RDS_PASSWORD"];
+            string hostname = appConfig["RDS_HOSTNAME"];
+            string port = appConfig["RDS_PORT"];
+
+            return "Data Source=" + hostname + ";Initial Catalog=" + dbname + ";User ID=" + username + ";Password=" + password + ";";
+        }
+
+
+    public static MyCoachDatabaseContext Create()
         {
             return new MyCoachDatabaseContext();
         }
@@ -50,5 +68,6 @@ namespace MyCoach.Models
         public virtual DbSet<Tag> Tags { get; set; }
 
         public virtual DbSet<Favorite> Favorites { get; set; }
+        public virtual DbSet<Procedure> Procedures { get; set; }
     }
 }

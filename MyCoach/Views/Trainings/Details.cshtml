@@ -37,69 +37,95 @@
             </div>
         </div>
     }
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Purpose)
-        </dt>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Purpose)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Purpose)
-        </dd>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Purpose)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Tags)
-        </dt>
-        <dd>
-            @foreach (var tag in Model.Tags)
-            {
-                <input type="button" class="btn btn-primary btn-xs" value="@Html.DisplayFor(modelItem => tag)">
-            }
-        <dt>
-            @Html.DisplayNameFor(model => model.AddDateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.AddDateTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdateDateTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UpdateDateTime)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.YoutubeURL)
-        </dt>
-
-        <dd>
-            @{
-                if (Model.YoutubeURL != string.Empty)
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Tags)
+            </dt>
+            <dd class="col-sm-9">
+                @foreach (var tag in Model.Tags)
                 {
-
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item" src="@Html.DisplayFor(model => model.YoutubeURL)"></iframe>
-                    </div>
+                    <input type="button" class="btn btn-primary btn-xs" value="@Html.DisplayFor(modelItem => tag)">
                 }
-            }
-        </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.AddDateTime)
+            </dt>
 
-    </dl>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.AddDateTime)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.UpdateDateTime)
+            </dt>
+
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.UpdateDateTime)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.TimeDuration)
+            </dt>
+
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.TimeDuration)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.RequiredPersonNumber)
+            </dt>
+
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.RequiredPersonNumber)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.RecommendPersonNumber)
+            </dt>
+
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.RecommendPersonNumber)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.YoutubeURL)
+            </dt>
+
+            <dd class="col-sm-9">
+                @{
+                    if (Model.GetYoutubeEmbedURL() != string.Empty)
+                    {
+                <div class="embed-responsive embed-responsive-16by9">
+                    @{
+                        string youtubeEmbedURL = Model.GetYoutubeEmbedURL();
+                    }
+                    <iframe class="embed-responsive-item" src="@Html.DisplayFor(model => youtubeEmbedURL)"></iframe>
+                </div>
+                    }
+                }
+            </dd>
+
+        </dl>
 </div>

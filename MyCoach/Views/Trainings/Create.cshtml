@@ -31,10 +31,10 @@
             @foreach (var tag in Model.Tags)
             {
                 <input type="checkbox" name="checkedTagValues" value="@tag.ID" />@tag.Name
-                
+
             }
             @*@Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })*@
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })*@
         </div>
     </div>
 
@@ -62,6 +62,29 @@
         </div>
     </div>
 
+    <div class="form-group">
+        @Html.LabelFor(model => model.TimeDuration, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TimeDuration, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TimeDuration, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RequiredPersonNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RequiredPersonNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.RequiredPersonNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.RecommendPersonNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RecommendPersonNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.RecommendPersonNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
     @*<div class="form-group">
             @Html.LabelFor(model => model.AddPersonId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

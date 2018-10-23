@@ -13,13 +13,13 @@ namespace MyCoach.Models
         //DropCreateDatabaseIfModelChanges<MyCoachDatabaseContext>
         DropCreateDatabaseAlways<MyCoachDatabaseContext>
     {
-        //public override void InitializeDatabase(MyCoachDatabaseContext context)
-        //{
-        //    context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction
-        //        , string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", context.Database.Connection.Database));
+        public override void InitializeDatabase(MyCoachDatabaseContext context)
+        {
+            context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction
+                , string.Format("ALTER DATABASE [{0}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE", context.Database.Connection.Database));
 
-        //    base.InitializeDatabase(context);
-        //}
+            base.InitializeDatabase(context);
+        }
         protected override void Seed(MyCoach.Models.MyCoachDatabaseContext context)
         {
             base.Seed(context);
@@ -27,6 +27,11 @@ namespace MyCoach.Models
             //タグの追加
             var strokeTag = new Tag { Name = "ストローク" };
             context.Tags.Add(strokeTag);
+
+            //var forestrokeTag = new Tag { Name = "フォアハンドストローク" };
+            //context.Tags.Add(forestrokeTag);
+            //var backstrokeTag = new Tag { Name = "バックハンドストローク" };
+            //context.Tags.Add(backstrokeTag);
 
             var volleyTag = new Tag { Name = "ボレー" };
             context.Tags.Add(volleyTag);
@@ -67,7 +72,11 @@ namespace MyCoach.Models
                 AddDateTime = DateTime.Now,
                 UpdateDateTime = DateTime.Now,
                 Tags = new List<Tag>(),
-                ApplicationUserId = user.Id
+                ApplicationUserId = user.Id,
+                RecommendPersonNumber = 6,
+                RequiredPersonNumber = 4,
+                TimeDuration = 15,
+                YoutubeURL = "https://www.youtube.com/watch?v=FbPZtKQiPdw"
 
             };
             gohonuchi.Tags.Add(strokeTag);
@@ -84,7 +93,12 @@ namespace MyCoach.Models
                 AddDateTime = DateTime.Now,
                 UpdateDateTime = DateTime.Now,
                 Tags = new List<Tag>(),
-                ApplicationUserId = user.Id
+                ApplicationUserId = user.Id,
+                RecommendPersonNumber = 6,
+                RequiredPersonNumber = 4,
+                TimeDuration = 15,
+                YoutubeURL = "https://www.youtube.com/watch?v=FbPZtKQiPdw"
+
 
             };
             netPlay.Tags.Add(volleyTag);

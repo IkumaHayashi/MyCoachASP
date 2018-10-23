@@ -1,6 +1,13 @@
-﻿body {
+﻿html {
+    font-family: 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+body {
+    font-family: 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
     padding-top: 50px;
     padding-bottom: 20px;
+    text-align: justify;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -9,6 +16,13 @@
     padding-right: 15px;
 }
 
+.tooltip {
+    font-family: "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+}
+
+.popover {
+    font-family: "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+}
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
@@ -21,4 +35,9 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.test {
+    position: absolute;
+    bottom: 0;
 }

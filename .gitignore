@@ -260,4 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 
-Web.Release.config
+MyCoach/Web.Release.config

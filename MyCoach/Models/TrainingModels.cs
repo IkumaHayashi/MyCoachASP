@@ -28,6 +28,20 @@ namespace MyCoach.Models
         [Required]
         public string Description { get; set; }
 
+        [Display(Name ="所要時間")]
+        [Required]
+        public int TimeDuration { get; set; }
+
+        [Display(Name = "最低人数")]
+        [Required]
+        public int RequiredPersonNumber { get; set; }
+
+        [Display(Name = "推奨人数")]
+        [Required]
+        public int RecommendPersonNumber { get; set; }
+
+
+
         [Display(Name = "Youtubeのリンク")]
         [Url(ErrorMessage = "正しいURLではありません。")]
         public string YoutubeURL { get; set; }
@@ -43,6 +57,7 @@ namespace MyCoach.Models
 
         public virtual ICollection<Tag> Tags { get; set; }
 
+        public virtual ICollection<Procedure> Procedures { get; set; }
 
     }
 
@@ -57,9 +72,17 @@ namespace MyCoach.Models
         public virtual ICollection<Training> Trainings { get; set; }
     }
 
-    //public class MyEntity
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //}
+    public class Procedure
+    {
+        public int ID { get; set; }
+
+        [Display(Name = "手順説明")]
+        public string Description { get; set; }
+
+        [Display(Name = "画像")]
+        public string ImagePath { get; set; }
+
+
+    }
+
 }

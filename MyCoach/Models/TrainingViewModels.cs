@@ -4,11 +4,14 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using System.Configuration;
 
 namespace MyCoach.Models
 {
     public class TrainingIndexViewModel
     {
+
+
         public int ID { get; set; }
 
         [Display(Name = "タイトル")]
@@ -21,11 +24,37 @@ namespace MyCoach.Models
         [Required]
         public string Description { get; set; }
 
-        [Display(Name = "Youtubeのリンク")]
+        [Display(Name = "動画")]
         public string YoutubeURL { get; set; }
+        
+        public string GetYoutubeEmbedURL()
+        {
+            var url = this.YoutubeURL;
+            var id = url.Replace(ConfigurationManager.AppSettings["YoutubeNormalURL"], "");
+            return ConfigurationManager.AppSettings["YoutubeEmbedURL"].Replace("%ID", id);
+        }
+
+        public string GetSumbnailURL(string size = "")
+        {
+            var url = this.YoutubeURL;
+            var id = url.Replace(ConfigurationManager.AppSettings["YoutubeNormalURL"], "");
+            if (size == "")
+            {
+                return ConfigurationManager.AppSettings["YoutubeSumbnailUrl"].Replace("%ID", id);
+            }
+            else if (size == "mq")
+            {
+                return ConfigurationManager.AppSettings["YoutubeMqSumbnailUrl"].Replace("%ID", id);
+            }
+            else
+            {
+                return ConfigurationManager.AppSettings["YoutubeHqSumbnailUrl"].Replace("%ID", id);
+            }
+            
+        }
 
         [Display(Name = "作成日時")]
-        public DateTime AddDateTime { get; set; }
+        public string AddDateTime { get; set; }
 
         [Display(Name = "更新日時")]
         public DateTime UpdateDateTime { get; set; }
@@ -35,6 +64,18 @@ namespace MyCoach.Models
 
         [Display(Name = "タグ")]
         public List<string> Tags { get; set; }
+
+        [Display(Name = "所要時間")]
+        [Required]
+        public int TimeDuration { get; set; }
+
+        [Display(Name = "最低人数")]
+        [Required]
+        public int RequiredPersonNumber { get; set; }
+
+        [Display(Name = "推奨人数")]
+        [Required]
+        public int RecommendPersonNumber { get; set; }
     }
 
     public class TrainingCreateViewModel
@@ -55,12 +96,24 @@ namespace MyCoach.Models
         [StringLength(60, MinimumLength = 1, ErrorMessage = "説明を入力してください。。")]
         public string Description { get; set; }
 
-        [Display(Name = "Youtubeのリンク")]
+        [Display(Name = "動画URL")]
         [Url(ErrorMessage = "正しいURLではありません。")]
         public string YoutubeURL { get; set; }
 
         [Display(Name = "タグ")]
         public List<Tag> Tags { get; set; }
+
+        [Display(Name = "所要時間")]
+        [Required]
+        public int TimeDuration { get; set; }
+
+        [Display(Name = "最低人数")]
+        [Required]
+        public int RequiredPersonNumber { get; set; }
+
+        [Display(Name = "推奨人数")]
+        [Required]
+        public int RecommendPersonNumber { get; set; }
     }
 
 
@@ -90,7 +143,7 @@ namespace MyCoach.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Checked { get; set; }
+        public bool Checked { get; set; }
     }
 
 
