@@ -16,17 +16,13 @@ namespace MyCoach.Models
 
         [Display(Name = "タイトル")]
         [Required]
-        [StringLength(60, MinimumLength = 1, ErrorMessage = "タイトルを入力してください。")]
+        [StringLength(60, MinimumLength = 1)]
         public string Title { get; set; }
 
         [Display(Name = "目的")]
         [Required]
-        [StringLength(60, MinimumLength =1, ErrorMessage ="目的を入力してください。")]
+        [StringLength(60, MinimumLength =1)]
         public string Purpose { get; set; }
-
-        [Display(Name = "説明")]
-        [Required]
-        public string Description { get; set; }
 
         [Display(Name ="所要時間")]
         [Required]

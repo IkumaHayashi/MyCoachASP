@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        #canvas {
+            background: #FF8856;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="./bootstrap.css">
+</head>
+<body>
+    <div class="col-xs-3">
+
+        <canvas id="canvas"></canvas>
+
+    </div>
+    <div class="col-xs-1">
+        <input type="button" value="球出しを配置" onclick="putPerson()" class="btn btn-default" />
+        <input type="button" value="プレイヤーを配置" onclick="putPerson()" class="btn btn-default" />
+    </div>
+    <script>
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+        var objX, objY;
+        var objWidth, objHeight;
+
+        initial();
+
+        function putPerson(target) {
+
+
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext('2d');
+            context.beginPath();
+            context.arc(70, 70, 60, 10 * Math.PI / 180, 80 * Math.PI / 180, true);
+            context.fill();
+        }
+
+
+        canvas.addEventListener('mousedown', onDown, false);
+        canvas.addEventListener('mouseup', onUp, false);
+        canvas.addEventListener('click', onClick, false);
+        canvas.addEventListener('mouseover', onOver, false);
+        canvas.addEventListener('mouseout', onOut, false);
+        canvas.addEventListener('onmove', onMove, false);
+
+        function initial() {
+
+
+            var canvas = document.getElementById("canvas");
+            var parentDiv = canvas.parentElement;
+            var context = canvas.getContext('2d');
+
+            //コートの横サイズを基準として各サイズを設定
+            var court_std_width = 110; //110;
+            var court_width = parentDiv.clientWidth;
+            var court_height = Math.round(court_width * 238 / court_std_width);
+            var offset_x = Math.round(court_width * 0.1);
+            var offset_y = Math.round(court_width * 0.1);
+            var singles_court_width = Math.round(court_width * 82 / court_std_width);
+            var service_line_heigth = Math.round(court_width * 64 / court_std_width);
+            var center_mark_height = Math.round(court_width * 7 / court_std_width);
+            var lineWidth = Math.round(court_width * 1 / court_std_width);
+
+            //Canvasのサイズ設定
+            canvas.height = Math.round(offset_x + court_height + offset_x);
+            canvas.width = Math.round(offset_y + court_width + offset_y);
+            canvas.setAttribute('width', canvas.width);
+            canvas.setAttribute('height', canvas.height);
+
+            console.log("court_width = " + court_width);
+            console.log("court_height = " + court_height);
+            console.log("offset_x = " + offset_x);
+            console.log("offset_y = " + offset_y);
+            console.log("singles_court_width = " + singles_court_width);
+            console.log("service_line_heigth = " + service_line_heigth);
+            console.log("center_mark_height = " + center_mark_height);
+            console.log("lineWidth = " + lineWidth);
+            
+
+            //外側ラインの描画
+            context.strokeStyle = "rgb(255, 255, 255)";
+            context.lineWidth = lineWidth;
+            context.fillStyle = "rgb(51, 255, 102)";
+            context.fillRect(offset_x, offset_y, court_width, court_height);
+
+            //シングルスラインの描画
+            //左シングルスサイドライン
+            context.beginPath();
+            context.moveTo(offset_x + (court_width - singles_court_width) / 2
+                , offset_y);
+            context.lineTo(offset_x + (court_width - singles_court_width) / 2
+                , offset_y + court_height);
+            context.closePath();
+            context.stroke();
+
+            //右シングルスサイドライン
+            context.beginPath();
+            context.moveTo(canvas.width - offset_x - (court_width - singles_court_width) / 2
+                , offset_y);
+            context.lineTo(canvas.width - offset_x - (court_width - singles_court_width) / 2
+                , offset_y + court_height);
+            context.closePath();
+            context.stroke();
+
+            //センターラインの描画
+            context.beginPath();
+            context.moveTo(canvas.width / 2, offset_y + court_height / 2 - service_line_heigth);
+            context.lineTo(canvas.width / 2, offset_y + court_height / 2 + service_line_heigth);
+            context.closePath();
+            context.stroke();
+
+            //上センターマークの描画
+            context.beginPath();
+            context.moveTo(canvas.width / 2, offset_y);
+            context.lineTo(canvas.width / 2, offset_y + center_mark_height);
+            context.closePath();
+            context.stroke();
+
+
+            //下センターマークの描画
+            context.beginPath();
+            context.moveTo(canvas.width / 2, offset_y + court_height);
+            context.lineTo(canvas.width / 2, offset_y + court_height - center_mark_height);
+            context.closePath();
+            context.stroke();
+
+            //ネットラインの描画
+            context.beginPath();
+            context.moveTo(0, canvas.height / 2);
+            context.lineTo(canvas.width, canvas.height / 2);
+            context.closePath();
+            context.stroke();
+
+            //上サービスラインの描画
+            context.beginPath();
+            context.moveTo(offset_x + (court_width - singles_court_width) / 2
+                , offset_y + court_height / 2 - service_line_heigth);
+            context.lineTo(offset_x + (court_width - singles_court_width) / 2 + singles_court_width
+                , offset_y + court_height / 2 - service_line_heigth);
+            context.closePath();
+            context.stroke();
+
+            //下サービスラインの描画
+            context.beginPath();
+            context.moveTo(offset_x + (court_width - singles_court_width) / 2
+                , offset_y + court_height / 2 + service_line_heigth);
+            context.lineTo(offset_x + (court_width - singles_court_width) / 2 + singles_court_width
+                , offset_y + court_height / 2 + service_line_heigth);
+            context.closePath();
+            context.stroke();
+
+
+        }
+
+
+
+        function onDown(e) {
+            console.log("down");
+            // キャンバスの左上端の座標を取得
+            var offsetX = canvas.getBoundingClientRect().left;
+            var offsetY = canvas.getBoundingClientRect().top;
+
+            // マウスが押された座標を取得
+            x = e.clientX - offsetX;
+            y = e.clientY - offsetY;
+
+            // オブジェクト上の座標かどうかを判定
+            if (objX < x && (objX + objWidth) > x && objY < y && (objY + objHeight) > y) {
+                dragging = true; // ドラッグ開始
+                relX = objX - x;
+                relY = objY - y;
+            }
+        }
+
+        function onUp(e) {
+            console.log("up");
+            dragging = false; // ドラッグ終了
+        }
+
+        function onClick(e) {
+            console.log("click");
+        }
+
+        function onOver(e) {
+            console.log("mouseover");
+        }
+
+        function onOut() {
+            console.log("mouseout");
+        }
+
+        function onMove(e) {
+            // キャンバスの左上端の座標を取得
+            var offsetX = canvas.getBoundingClientRect().left;
+            var offsetY = canvas.getBoundingClientRect().top;
+
+            // マウスが移動した先の座標を取得
+            x = e.clientX - offsetX;
+            y = e.clientY - offsetY;
+
+            // ドラッグが開始されていればオブジェクトの座標を更新して再描画
+            if (dragging) {
+                objX = x + relX;
+                objY = y + relY;
+                drawRect();
+            }
+        }
+
+        window.onresize = function () {
+            initial();
+        }
+
+
+
+
+    </script>
+</body>
+</html>

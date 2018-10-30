@@ -68,7 +68,6 @@ namespace MyCoach.Models
             {
                 Title = "ストローク５本打ち",
                 Purpose = "ストローク力の強化",
-                Description = "クロス、ミドル、クロス、ストレートロブ、トップ打ちの順番に練習します。",
                 AddDateTime = DateTime.Now,
                 UpdateDateTime = DateTime.Now,
                 Tags = new List<Tag>(),
@@ -89,7 +88,6 @@ namespace MyCoach.Models
             {
                 Title = "ネットプレー５本打ち",
                 Purpose = "ネットプレー力の強化",
-                Description = "正面ボレー、ストレートの守りボレー、クロスポーチボレー、スマッシュ、ローボレーの順番に練習します。",
                 AddDateTime = DateTime.Now,
                 UpdateDateTime = DateTime.Now,
                 Tags = new List<Tag>(),

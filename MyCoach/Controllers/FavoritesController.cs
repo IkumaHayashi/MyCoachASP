@@ -18,7 +18,19 @@ namespace MyCoach.Controllers
         // GET: Favorites
         public ActionResult Index()
         {
-            return View(db.Favorites.ToList());
+            //Favoriteのトレーニングを取得
+            var userMail = User.Identity.Name;
+            var user = Models.ApplicationUser.GetUserFromMail(userMail);
+            var trainingList = new List<Training>();
+            foreach(var favorite in db.Favorites.Where(f => f.ApplicationUserId == user.Id))
+            {
+                trainingList.Add(db.Trainings.FirstOrDefault(t => t.ID == favorite.TrainingID));
+            }
+
+            //表示用のモデルを生成
+            var viewModel = new List<TrainingIndexViewModel>();
+            trainingList.ForEach(t => viewModel.Add(new TrainingIndexViewModel(t)));
+            return View(viewModel);
         }
 
         // GET: Favorites/Details/5

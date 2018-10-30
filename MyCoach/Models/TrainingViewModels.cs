@@ -9,24 +9,32 @@ using System.Configuration;
 namespace MyCoach.Models
 {
     public class TrainingIndexViewModel
+        : Training
     {
 
+        public TrainingIndexViewModel()
+        {
 
-        public int ID { get; set; }
+        }
+        public TrainingIndexViewModel(Training training )
+        {
+            ID = training.ID;
+            AddDateTime = training.AddDateTime.ToShortDateString();
+            Purpose = training.Purpose;
+            Title = training.Title;
+            UpdateDateTime = training.UpdateDateTime;
+            YoutubeURL = training.YoutubeURL;
+            Tags = training.Tags.Select(x => x.Name).ToList();
 
-        [Display(Name = "タイトル")]
-        public string Title { get; set; }
-
-        [Display(Name = "目的")]
-        public string Purpose { get; set; }
-
-        [Display(Name = "説明")]
-        [Required]
-        public string Description { get; set; }
+            using (var db = new MyCoachDatabaseContext())
+            {
+                var userId = training.ApplicationUserId;
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+                if (user != null) UserName = user.UserName;
+            }
+        }
 
         [Display(Name = "動画")]
-        public string YoutubeURL { get; set; }
-        
         public string GetYoutubeEmbedURL()
         {
             var url = this.YoutubeURL;
@@ -34,6 +42,7 @@ namespace MyCoach.Models
             return ConfigurationManager.AppSettings["YoutubeEmbedURL"].Replace("%ID", id);
         }
 
+        [Display(Name = "サムネイル")]
         public string GetSumbnailURL(string size = "")
         {
             var url = this.YoutubeURL;
@@ -53,29 +62,16 @@ namespace MyCoach.Models
             
         }
 
-        [Display(Name = "作成日時")]
-        public string AddDateTime { get; set; }
-
-        [Display(Name = "更新日時")]
-        public DateTime UpdateDateTime { get; set; }
-
         [Display(Name = "登録者名")]
         public string UserName { get; set; }
 
-        [Display(Name = "タグ")]
-        public List<string> Tags { get; set; }
+        [Display(Name = "作成日時")]
+        public new string AddDateTime { get; set; }
 
-        [Display(Name = "所要時間")]
-        [Required]
-        public int TimeDuration { get; set; }
 
-        [Display(Name = "最低人数")]
-        [Required]
-        public int RequiredPersonNumber { get; set; }
+        [Display(Name = "作成日時")]
+        public new List<string> Tags { get; set; }
 
-        [Display(Name = "推奨人数")]
-        [Required]
-        public int RecommendPersonNumber { get; set; }
     }
 
     public class TrainingCreateViewModel

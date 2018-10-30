@@ -41,7 +41,6 @@ namespace MyCoach.Controllers
                 {
                     ID = trainings[i].ID,
                     AddDateTime = trainings[i].AddDateTime.ToShortDateString(),
-                    Description = trainings[i].Description,
                     Purpose = trainings[i].Purpose,
                     Title = trainings[i].Title,
                     UpdateDateTime = trainings[i].UpdateDateTime,
@@ -104,7 +103,6 @@ namespace MyCoach.Controllers
                 {
                     db.Trainings.Where(t => t.Title.Contains(searchValue)).ToList().ForEach(training => trainings.Add(training));
                     db.Trainings.Where(t => t.Purpose.Contains(searchValue)).ToList().ForEach(training => trainings.Add(training));
-                    db.Trainings.Where(t => t.Description.Contains(searchValue)).ToList().ForEach(training => trainings.Add(training));
 
                 }
 
@@ -131,28 +129,29 @@ namespace MyCoach.Controllers
             var trainingIndexViewModels = new List<TrainingIndexViewModel>();
             for (int i = 0; i < trainings.Count; i++)
             {
-                //ユーザー名を取得
-                string userName = "";
-                using (var appUserContext = new MyCoachDatabaseContext())
-                {
-                    var userId = trainings[i].ApplicationUserId;
-                    var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
-                    if (user != null) userName = user.Name;
-                }
+                var viewTraining = new TrainingIndexViewModel(trainings[i]);
 
-                //オブジェクトに設定
-                var viewTraining = new TrainingIndexViewModel
-                {
-                    ID = trainings[i].ID,
-                    AddDateTime = trainings[i].AddDateTime.ToShortDateString(),
-                    Description = trainings[i].Description,
-                    Purpose = trainings[i].Purpose,
-                    Title = trainings[i].Title,
-                    UpdateDateTime = trainings[i].UpdateDateTime,
-                    YoutubeURL = trainings[i].YoutubeURL,
-                    Tags = trainings[i].Tags.Select(x => x.Name).ToList(),
-                    UserName = userName
-                };
+                ////ユーザー名を取得
+                //string userName = "";
+                //using (var appUserContext = new MyCoachDatabaseContext())
+                //{
+                //    var userId = trainings[i].ApplicationUserId;
+                //    var user = appUserContext.Users.FirstOrDefault(u => u.Id == userId);
+                //    if (user != null) userName = user.Name;
+                //}
+
+                ////オブジェクトに設定
+                //var viewTraining = new TrainingIndexViewModel
+                //{
+                //    ID = trainings[i].ID,
+                //    AddDateTime = trainings[i].AddDateTime.ToShortDateString(),
+                //    Purpose = trainings[i].Purpose,
+                //    Title = trainings[i].Title,
+                //    UpdateDateTime = trainings[i].UpdateDateTime,
+                //    YoutubeURL = trainings[i].YoutubeURL,
+                //    Tags = trainings[i].Tags.Select(x => x.Name).ToList(),
+                //    UserName = userName
+                //};
                 trainingIndexViewModels.Add(viewTraining);
 
             }
@@ -197,7 +196,6 @@ namespace MyCoach.Controllers
             {
                 ID = training.ID,
                 AddDateTime = training.AddDateTime.ToShortDateString(),
-                Description = training.Description,
                 Purpose = training.Purpose,
                 Title = training.Title,
                 UpdateDateTime = training.UpdateDateTime,
@@ -286,7 +284,6 @@ namespace MyCoach.Controllers
             {
                 ID = training.ID,
                 AddDateTime = training.AddDateTime.ToShortDateString(),
-                Description = training.Description,
                 Purpose = training.Purpose,
                 Title = training.Title,
                 UpdateDateTime = training.UpdateDateTime,
@@ -341,7 +338,6 @@ namespace MyCoach.Controllers
                 training.Purpose = editTraining.Purpose;
                 training.Title = editTraining.Title;
                 training.YoutubeURL = editTraining.YoutubeURL;
-                training.Description = editTraining.Description;
                 training.Tags = checkedTags;
 
                 training.UpdateDateTime = DateTime.Now;

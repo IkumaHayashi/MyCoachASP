@@ -10,6 +10,23 @@ namespace MyCoach.Models
     // ApplicationUser クラスにさらにプロパティを追加すると、ユーザーのプロファイル データを追加できます。詳細については、https://go.microsoft.com/fwlink/?LinkID=317594 を参照してください。
     public class ApplicationUser : IdentityUser
     {
+        public static ApplicationUser GetUserFromMail(string mail)
+        {
+            using (var db = new MyCoachDatabaseContext())
+            {
+                var getUserTask = db.Users.FirstOrDefaultAsync(u => u.Email == mail);
+                getUserTask.Wait();
+                var applicationUser = getUserTask.Result;
+                if(applicationUser != null)
+                {
+                    return applicationUser;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
         [Required]
         [StringLength(100)]

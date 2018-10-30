@@ -26,9 +26,16 @@
                     @{
                         if (User.Identity.IsAuthenticated)
                         {
-                            <li>@Html.ActionLink("トレーニング投稿", "Create", "Trainings")</li>
-                            <li>@Html.ActionLink("トレーニング管理", "Index", "Trainings")</li>
-                            <li>@Html.ActionLink("お気に入り", "Index", "Favorites")</li>
+                            <li class="dropdown">
+                                <div class="navbar-text dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">コーチメニュー <span class="caret"></span></div>
+                                <ul class="dropdown-menu">
+
+                                    <li>@Html.ActionLink("トレーニング投稿", "Create", "Trainings")</li>
+                                    <li>@Html.ActionLink("トレーニング管理", "Index", "Trainings")</li>
+                                    <li>@Html.ActionLink("お気に入り", "Index", "Favorites")</li>
+                                </ul>
+                            </li>
+
 
                         }
                     }
